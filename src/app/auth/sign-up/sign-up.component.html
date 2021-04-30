@@ -1,0 +1,86 @@
+<div class="container-fluid">
+    <form (ngSubmit)="onSubmit()" #f="ngForm" name="formSignUp">
+        <div class="row mt-5 ">
+            <div class="col-md-3 "></div>
+            <div class="col-md-6 ">
+                <div class="form-group ">
+                    <label for="email ">E-Mail</label>
+                    <input type="email " class="form-control " ngModel name="email" required email #email="ngModel">
+                    <span class="help-block text-danger" *ngIf="!email.valid && email.touched">* Please Enter Valid Email</span>
+                </div>
+            </div>
+            <div class="col-md-3 "></div>
+        </div>
+        <div class="row mt-2 ">
+            <div class="col-md-3 "></div>
+            <div class="col-md-6 ">
+                <div class="form-group ">
+                    <label for="email ">Full Name</label>
+                    <input type="Text " class="form-control " ngModel name="Fullname" required Fullname #Fullname="ngModel">
+                    <span class="help-block text-danger" *ngIf="!Fullname.valid && Fullname.touched">* Please Enter Name</span>
+                </div>
+            </div>
+            <div class="col-md-3 "></div>
+        </div>
+        <div class="row mt-2 ">
+            <div class="col-md-3 "></div>
+            <div class="col-md-6 ">
+                <div class="form-group ">
+                    <label for="email ">Mobile NO</label>
+                    <input type="Text" class="form-control " minlength="10" maxlength="10" ngModel name="contact" required contact #contact="ngModel">
+                    <span class="help-block text-danger" *ngIf="!contact.valid && contact.touched">* Please Enter Valid Mobile No</span>
+                </div>
+            </div>
+            <div class="col-md-3 "></div>
+        </div>
+        <div class="row mt-2 ">
+            <div class="col-md-3 "></div>
+            <div class="col-md-6 ">
+                <div class="form-group ">
+                    <label for="password ">Aadhar No</label>
+                    <input type="text" class="form-control " ngModel name="aadhar" minlength="8" maxlength="8" required aadhar #aadhar="ngModel">
+                    <span class="help-block text-danger" *ngIf="!aadhar.valid && aadhar.touched">* Please Enter Valid aadhar</span>
+                </div>
+            </div>
+            <div class="col-md-3 "></div>
+        </div>
+        <div class="row mt-2 ">
+            <div class="col-md-3 "></div>
+            <div class="col-md-6 ">
+                <div class="form-group ">
+                    <label for="password ">Password</label>
+                    <input type="password" class="form-control " ngModel name="password" minlength="8" maxlength="8" required password #password="ngModel">
+                    <span class="help-block text-danger" *ngIf="!password.valid && password.touched">* Please Enter Valid Password</span>
+                </div>
+            </div>
+            <div class="col-md-3 "></div>
+        </div>
+        <div class="row mt-2 ">
+            <div class="col-md-3 "></div>
+            <div class="col-md-6 ">
+                <div class="form-group ">
+                    <label for="password ">Conform Password</label>
+                    <input type="password" class="form-control " ngModel name="cpassword " minlength="8" maxlength="8" required password #cpassword="ngModel">
+                    <span class="help-block text-danger" *ngIf="!password.valid && password.touched ">* Please Enter Password First</span>
+                    <span class="help-block text-danger" *ngIf="!cpassword.valid && cpassword.touched">* Conform Password required </span>
+                    <span class="help-block text-danger" *ngIf="cpassword.value!=password.value">*Password Not Match </span>
+                </div>
+            </div>
+            <div class="col-md-3 "></div>
+        </div>
+        <div class="row mt-1 " *ngIf="error">
+            <div class="col-md-3 "></div>
+            <div class="col-md-6 alert-danger ">
+                <p class="text-center pt-3">{{error}}</p>
+            </div>
+            <div class="col-md-3 "></div>
+        </div>
+        <div class="row mt-1 ">
+            <div class="col-md-3 "></div>
+            <div class="col-md-6 ">
+                <button type="submit " class="btn btn-primary " [disabled]="!f.valid" ngDefaultControl name="submit ">Login</button>
+            </div>
+            <div class="col-md-3 "></div>
+        </div>
+    </form>
+</div>

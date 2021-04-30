@@ -1,0 +1,102 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="exampleInputEmail1">Enter Aadhar No</label>
+                <input type="email" class="form-control" placeholder="Enter Aadhar No" [(ngModel)]="aadharNumber">
+                <span class="info">12365475</span>
+                <hr/>
+                <button class="btn btn-primary mt-4" (click)="loadDtata()">Search</button>
+
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="class">
+                <form #f="ngForm">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th style="width: 40%;" scope="col " class="table-dark">AAdhar No</th>
+                                <th scope="col">{{person[0].aadharNo!=null ? person[0].aadharNo: '##########'}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="col " class="table-dark">Eligibility</th>
+                                <th scope="col">{{person[0].eligibility!=null ? person[0].eligibility: '##########'}}</th>
+                            </tr>
+                            <tr>
+                                <th scope="col " class="table-dark">Name</th>
+                                <th scope="col">{{person[0].name!=null ? person[0].name:'########'}}</th>
+                            </tr>
+                            <tr>
+                                <th scope="col " class="table-dark">Age</th>
+                                <th scope="col">{{person[0].age!=null ? person[0].age:'########'}}</th>
+                            </tr>
+                            <tr>
+                                <th scope="col " class="table-dark">Vaccination Status</th>
+                                <th scope="col">{{person[0].vactnationStatus!=null ? person[0].vactnationStatus:'########'}}</th>
+                            </tr>
+                            <tr *ngIf="person[0].eligibility==true">
+                                <th scope="col " class="table-dark">First Dose Date</th>
+                                <th scope="col">{{person[0].firstdose | date: 'mediumDate'}}</th>
+                            </tr>
+                            <tr *ngIf="person[0].firstShot==true">
+                                <th scope="col " class="table-dark">Second Dose Date</th>
+                                <th scope="col">{{person[0].seconddose==null ? '############':person[0].seconddose |date: 'short' }}</th>
+                            </tr>
+                            <tr *ngIf="person[0].firstShot!=true">
+                                <th scope="col " class="table-dark">Select Vaccine</th>
+
+                                <th scope="col">
+
+                                    <select id="vaccine" class="btn btn-primary form-control float-right" (change)="selectedValue($event)" [ngModel]="defaultSelect" name="vaccine">
+                                    <option value="Vaccine">Select Preferd Vaccine</option>
+                                    <option *ngFor="let player of vaccines" [value]="player">
+                                        {{player}}
+                                    </option>
+                                </select>
+
+                                </th>
+                            </tr>
+                            <tr *ngIf="person[0].firstShot==true">
+                                <th scope="col " class="table-dark">
+                                    Second Dose Of:
+                                </th>
+                                <th scope="col ">
+                                    {{person[0].vaccine}}
+                                </th>
+                            </tr>
+                            <tr *ngIf="person[0].firstShot!=true">
+                                <th scope="col " class="table-dark">Take Vaccine</th>
+                                <th scope="col ">
+                                    <ng-template #tipContent>Hello, <b>{{person[0].name}}</b> You are Not Eligible!</ng-template>
+                                    <button class="btn btn-primary float-right" [ngbTooltip]="!person[0].eligibility ? tipContent: null" [disabled]="!person[0].eligibility" [title]="!person[0].eligibility ? 'Date is Not Reach Yet For Second Dose' : ''" (click)="takeFirstShort(person[0].aadharNo)">Take First Short</button>
+                                </th>
+                            </tr>
+                            <tr *ngIf="person[0].firstShot==true">
+                                <th scope="col " class="table-dark">Take Vaccine</th>
+                                <th scope="col ">
+                                    <ng-template #tipContent1>Hello, <b>{{person[0].name}}</b> Second Shot Date not reached yet!</ng-template>
+                                    <button class="btn btn-primary float-right" [disabled]="!person[0].isSecondShot" ngDefaultControl (click)="takeSecondShot()">Take Second Short</button>
+                                </th>
+                            </tr>
+                            <tr *ngIf="person[0].firstShot==true && person[0].secondShot==true">
+                                <th scope="col " class="table-dark">Ammunity</th>
+                                <th scope="col ">
+                                    <span class="text-center text-success">Congratulation Your Are Now amune to Noval Coronavarious</span>
+                                </th>
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
