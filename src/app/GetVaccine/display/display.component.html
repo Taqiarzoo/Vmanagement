@@ -71,20 +71,21 @@
                                 <th scope="col " class="table-dark">Take Vaccine</th>
                                 <th scope="col ">
                                     <ng-template #tipContent>Hello, <b>{{person[0].name}}</b> You are Not Eligible!</ng-template>
-                                    <button class="btn btn-primary float-right" [ngbTooltip]="!person[0].eligibility ? tipContent: null" [disabled]="!person[0].eligibility" [title]="!person[0].eligibility ? 'Date is Not Reach Yet For Second Dose' : ''" (click)="takeFirstShort(person[0].aadharNo)">Take First Short</button>
+                                    <button class="btn btn-primary float-right" [ngbTooltip]="!person[0].eligibility ? tipContent: null" [disabled]="!person[0].eligibility" [title]="!person[0].eligibility ? 'Date is Not Reach Yet For Second Dose' : ''" (click)="takeFirstShort(person[0])">Take First Short</button>
                                 </th>
                             </tr>
-                            <tr *ngIf="person[0].firstShot==true">
+                            <tr *ngIf="person[0].firstShot==true && person[0].secondShot==false">
                                 <th scope="col " class="table-dark">Take Vaccine</th>
                                 <th scope="col ">
                                     <ng-template #tipContent1>Hello, <b>{{person[0].name}}</b> Second Shot Date not reached yet!</ng-template>
-                                    <button class="btn btn-primary float-right" [disabled]="!person[0].isSecondShot" ngDefaultControl (click)="takeSecondShot()">Take Second Short</button>
+                                    <button class="btn btn-primary float-right" [disabled]="!person[0].isSecondShot" ngDefaultControl (click)="takeSecondShot(person[0])">Take Second Short</button>
                                 </th>
                             </tr>
                             <tr *ngIf="person[0].firstShot==true && person[0].secondShot==true">
                                 <th scope="col " class="table-dark">Ammunity</th>
                                 <th scope="col ">
                                     <span class="text-center text-success">Congratulation Your Are Now amune to Noval Coronavarious</span>
+                                    <span class="text-success float-right"><a href="https://greymatterlearning.co.uk/wp-content/uploads/2020/07/sample-corona-cert.png">Download Certificate</a></span>
                                 </th>
                             </tr>
                         </tbody>

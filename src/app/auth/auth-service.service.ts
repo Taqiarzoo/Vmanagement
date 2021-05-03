@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import{ tap } from 'rxjs/operators';
 import { authModel } from './auth-model';
+import { stringify } from '@angular/compiler/src/util';
 
 interface AuthResponseData{
   idToken: string;
@@ -76,8 +77,46 @@ export class AuthServiceService {
   private handleAuthentication(email: string,localId:string,idToken,expiresIn:number){
     const expairDate=new Date(new Date().getTime() + expiresIn * 1000);
       const user =new User(email,localId,idToken,expairDate);
+      localStorage.setItem('userData',JSON.stringify(user));
       this.user.next(user);
+      
       this.router.navigate(['/']);
+  }
+  //this function is responsible for auto login 
+  //which prevent state lost on refresh it store user data into local storage
+  //this function is call from appComponenet's OnInit() function because 
+  //that component load first.
+  autoLogin(){
+    const userdata: {
+        email:string;
+        id: string;
+        _token:string;
+        _tokenExpairDate:Date;
+    }=JSON.parse(localStorage.getItem('userData'));
+    if(!userdata){
+      return;
+    }
+    console.log("Auto Login Call");
+    
+    const loadedData=new User
+    (
+      userdata.email,
+      userdata.id,
+      userdata._token,
+      new Date
+      (
+        userdata._tokenExpairDate
+      )
+    );
+    if(loadedData.token){
+      console.log(loadedData);
+      this.user.next(loadedData);
+    }
+
+  }
+  logout(){
+    this.user.next(null);
+    this.router.navigate(['login']);
   }
 
 }

@@ -76,10 +76,7 @@ export class DataServiceService {
   }
   
   //now call
-  firstShort(aadhar: Number,vaccine:string){
-    let dt:Date=new Date();
-    for(let element of this.persn){
-      if(element.aadharNo==aadhar){
+  firstShort(element:person,vaccine:string){
           element.firstdose= Date.now();
           element.vactnationStatus=true;
           let a = new Date(element.firstdose);
@@ -88,14 +85,12 @@ export class DataServiceService {
           a.setMinutes(a.getMinutes()+1);
           element.seconddose=a.getTime();
           element.firstShot=true;
-          element.vaccine=vaccine;
-      }
-      
-    } 
+          element.secondShot=false;
+          element.vaccine=vaccine; 
+  } 
+  secondShot(element: person){
+    element.secondShot=true;
   }
-  
-
-  
 }
 
 

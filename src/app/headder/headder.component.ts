@@ -14,12 +14,15 @@ export class HeadderComponent implements OnInit {
 
   ngOnInit(): void {
     this.auth.user.subscribe(user=>{
+      console.log('IN Subscription');
+      console.log(user.email);
       this.isLogin= !user? false: true;
+      console.log('IN Subscription'+this.isLogin);
     })
   }
   signOut(){
     console.log("You are LogOut");
-    this.auth.user.unsubscribe();
+    this.auth.logout();
   }
   SignIn(){
     this.router.navigate(['login']);

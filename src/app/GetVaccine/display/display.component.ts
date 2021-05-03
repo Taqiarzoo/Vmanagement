@@ -30,12 +30,7 @@ export class DisplayComponent implements OnInit {
   loadDtata(){
     //this.dataService.getAadhar(this.aadharNumber);
     //console.log("Before Sending"+)
-    
-    
       this.person.splice(0,1,this.dataService.loadDetailes(this.aadharNumber));
-    
-    
-    
   }
   ngOnInit(): void {
     for(let element of this.vaccine.vaccine){
@@ -60,8 +55,8 @@ export class DisplayComponent implements OnInit {
   }
     
   
-  takeFirstShort(aadhar: Number){
-      this.dataService.firstShort(aadhar,this.formData.value.vaccine);
+  takeFirstShort(person: person){
+      this.dataService.firstShort(person,this.formData.value.vaccine);
       this.secondShoot1=this.secondShot.subscribe(data=>{
         this.person[0].isSecondShot=data;
       });
@@ -73,8 +68,9 @@ export class DisplayComponent implements OnInit {
   isSecondDose(){
     
   }
-  takeSecondShot(){
+  takeSecondShot(person: person){
     console.log("You UNsubscribe");
+    this.dataService.secondShot(person);
     this.secondShoot1.unsubscribe();
   }
 }
