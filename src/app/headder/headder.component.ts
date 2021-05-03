@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,DoCheck } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthServiceService } from '../auth/auth-service.service';
 import {SignUpComponent} from '../auth/sign-up/sign-up.component'
@@ -8,18 +8,20 @@ import {SignUpComponent} from '../auth/sign-up/sign-up.component'
   templateUrl: './headder.component.html',
   styleUrls: ['./headder.component.scss']
 })
-export class HeadderComponent implements OnInit {
+export class HeadderComponent implements OnInit, DoCheck {
   isLogin:boolean=false;
   constructor(private auth:AuthServiceService,private router:Router) { }
 
-  ngOnInit(): void {
+  ngOnInit(){
     this.auth.user.subscribe(user=>{
-      console.log('Header Call');
-      
-      console.log('IN Subscription Header'+this.isLogin);
       this.isLogin= !user? false: true;
-      console.log('IN Subscription Header'+this.isLogin);
-      
+    })
+  }
+  ngDoCheck(){
+    //Called every time that the input properties of a component or a directive are checked. Use it to extend change detection by performing a custom check.
+    //Add 'implements DoCheck' to the class.
+    this.auth.user.subscribe(user=>{
+      this.isLogin= !user? false: true;
     })
   }
   signOut(){

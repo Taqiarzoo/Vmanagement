@@ -20,9 +20,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './auth/login/login.component';
 import { SignUpComponent } from './auth/sign-up/sign-up.component';
 import { from } from 'rxjs';
+import { AuthGuardService } from './auth/auth.guard.service';
 const routes:Routes=[
   {path: '',component: LoginComponent},
-  {path: 'home', component: GetVaccineComponent},
+  {path: 'home', component: GetVaccineComponent,canActivate: [AuthGuardService]},
   {path: 'Statistic', component: StatisticComponent},
   {path: 'vaccine', component: VaccineComponent},
   {path: 'signup',component: SignUpComponent}

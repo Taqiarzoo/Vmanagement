@@ -69,7 +69,7 @@ export class AuthServiceService {
       password:auth.password,
       returnSecureToken:true
     }).pipe(tap(resdata=>{
-      console.log("Response Data"+resdata);
+      console.log("all Auth");
       this.handleAuthentication(resdata.email,resdata.localId,resdata.idToken,+resdata.expiresIn)
   }))
   }
@@ -77,9 +77,10 @@ export class AuthServiceService {
   private handleAuthentication(email: string,localId:string,idToken,expiresIn:number){
     const expairDate=new Date(new Date().getTime() + expiresIn * 1000);
       const user =new User(email,localId,idToken,expairDate);
-      localStorage.setItem('userData',JSON.stringify(user));
       this.user.next(user);
+      localStorage.setItem('userData',JSON.stringify(user));
       
+      console.log("user Object Created");
       this.router.navigate(['home']);
   }
   //this function is responsible for auto login 
@@ -111,6 +112,9 @@ export class AuthServiceService {
     if(loadedData.token){
       console.log(loadedData);
       this.user.next(loadedData);
+    }
+    else{
+      console.log("data Not Emmit");
     }
 
   }
