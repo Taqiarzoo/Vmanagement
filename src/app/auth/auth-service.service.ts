@@ -80,7 +80,7 @@ export class AuthServiceService {
       localStorage.setItem('userData',JSON.stringify(user));
       this.user.next(user);
       
-      this.router.navigate(['/']);
+      this.router.navigate(['home']);
   }
   //this function is responsible for auto login 
   //which prevent state lost on refresh it store user data into local storage
@@ -115,8 +115,10 @@ export class AuthServiceService {
 
   }
   logout(){
-    this.user.next(null);
-    this.router.navigate(['login']);
+    console.log("user clear");
+        this.user.next(null);
+        localStorage.removeItem('userData');
+        this.router.navigate(['/']);
   }
 
 }

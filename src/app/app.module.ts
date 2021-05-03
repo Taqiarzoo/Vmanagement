@@ -21,10 +21,10 @@ import { LoginComponent } from './auth/login/login.component';
 import { SignUpComponent } from './auth/sign-up/sign-up.component';
 import { from } from 'rxjs';
 const routes:Routes=[
-  {path: '', component: GetVaccineComponent},
+  {path: '',component: LoginComponent},
+  {path: 'home', component: GetVaccineComponent},
   {path: 'Statistic', component: StatisticComponent},
   {path: 'vaccine', component: VaccineComponent},
-  {path: 'login',component: LoginComponent},
   {path: 'signup',component: SignUpComponent}
 ]
 @NgModule({

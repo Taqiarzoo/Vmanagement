@@ -14,10 +14,12 @@ export class HeadderComponent implements OnInit {
 
   ngOnInit(): void {
     this.auth.user.subscribe(user=>{
-      console.log('IN Subscription');
-      console.log(user.email);
+      console.log('Header Call');
+      
+      console.log('IN Subscription Header'+this.isLogin);
       this.isLogin= !user? false: true;
-      console.log('IN Subscription'+this.isLogin);
+      console.log('IN Subscription Header'+this.isLogin);
+      
     })
   }
   signOut(){
@@ -25,7 +27,7 @@ export class HeadderComponent implements OnInit {
     this.auth.logout();
   }
   SignIn(){
-    this.router.navigate(['login']);
+    this.router.navigate(['/']);
     console.log("You are LogIn");
   }
 
