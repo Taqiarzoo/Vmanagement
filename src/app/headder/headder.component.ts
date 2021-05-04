@@ -14,14 +14,24 @@ export class HeadderComponent implements OnInit, DoCheck {
 
   ngOnInit(){
     this.auth.user.subscribe(user=>{
-      this.isLogin= !user? false: true;
+      if(user){
+        this.isLogin=true
+      }
+      else{
+        this.isLogin=false;
+      }
     })
   }
   ngDoCheck(){
     //Called every time that the input properties of a component or a directive are checked. Use it to extend change detection by performing a custom check.
     //Add 'implements DoCheck' to the class.
     this.auth.user.subscribe(user=>{
-      this.isLogin= !user? false: true;
+      if(user){
+        this.isLogin=true
+      }
+      else{
+        this.isLogin=false;
+      }
     })
   }
   signOut(){

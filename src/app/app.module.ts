@@ -15,18 +15,21 @@ import { VaccineComponent } from './Vaccine/vaccine/vaccine.component';
 import { GetVaccineComponent } from './GetVaccine/get-vaccine/get-vaccine.component';
 import { HeadderComponent } from './headder/headder.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { CanActivate } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './auth/login/login.component';
 import { SignUpComponent } from './auth/sign-up/sign-up.component';
 import { from } from 'rxjs';
-import { AuthGuardService } from './auth/auth.guard.service';
+import { AuthGuardService } from './auth/authGuard.service';
+import { AuthServiceService } from './auth/auth-service.service';
 const routes:Routes=[
   {path: '',component: LoginComponent},
-  {path: 'home', component: GetVaccineComponent,canActivate: [AuthGuardService]},
+  {path: 'home', component: GetVaccineComponent},
   {path: 'Statistic', component: StatisticComponent},
   {path: 'vaccine', component: VaccineComponent},
-  {path: 'signup',component: SignUpComponent}
+  {path: 'signup',component: SignUpComponent},
+  {path: '**', component: LoginComponent}
 ]
 @NgModule({
   declarations: [
