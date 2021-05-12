@@ -1,0 +1,65 @@
+<div class="container">
+    <div class="row mt-5 p-3 mb-5">
+        <div class="col-12">
+            <h3 class="text-success text-center">Welcome to vaccine PreBooking</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <form>
+                <div class="form-group">
+                    <label for="inputAadhar">Enter Aadhar No</label>
+                    <input type="text" class="form-control" name="aadhar" id="inputAadhar" [(ngModel)]="aadharNumber">
+                    <br>
+                    <span class="info">Aadhar No Range (12367210 to 12369939)</span><br>
+                    <br>
+                    <button class="btn btn-primary w-100 mt-4" [disabled]="isloading" (click)="loadDtata()">{{!isloading?  "Search": "Loading...."}}</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-8">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th style="width: 40%;" scope="col " class="table-dark">AAdhar No</th>
+                        <th scope="col">{{person[0].aadharNo!=null ? person[0].aadharNo: '##########'}}</th>
+                    </tr>
+
+
+                    <tr>
+                        <th scope="col " class="table-dark">Eligibility</th>
+                        <th scope="col">{{person[0].eligibility!=null ? (person[0].eligibility? 'Eligible': 'Not Eligible'): '##########'}}</th>
+                    </tr>
+                    <tr>
+                        <th scope="col " class="table-dark">Name</th>
+                        <th scope="col">{{person[0].name!=null ? person[0].name:'########'}}</th>
+                    </tr>
+                    <tr>
+                        <th scope="col " class="table-dark">Age</th>
+                        <th scope="col">{{person[0].age!=null ? person[0].age:'########'}}</th>
+                    </tr>
+                    <tr>
+                        <th scope="col " class="table-dark">Booking</th>
+                        <th scope="col">
+                            <!-- [disabled]="false" -->
+                            <ngb-datepicker datepickerClass="ngb-dp-today" [markDisabled]="isDisabled" [minDate]="setMinDate" [maxDate]="setMaxDate" class="w-100 p-0 m-0" #dp [(ngModel)]="model" (navigate)="date = $event.next"></ngb-datepicker>
+                            <ng-template #t let-date>
+                                {{ date.day }}
+                            </ng-template>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th scope="col " class="table-dark">Booking</th>
+                        <th scope="col" *ngIf="!person[0].isPreBook">
+                            <button class="btn btn-primary float-right" (click)="preBooking(person[0])" [disabled]="!model || !person[0].eligibility">Book Slot</button>
+                        </th>
+                        <th scope="col" *ngIf="person[0].isPreBook">
+                            <strong class="text-success">Your Slot is Booked on {{person[0].perBook | date: 'mediumDate'}}</strong>
+                        </th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>

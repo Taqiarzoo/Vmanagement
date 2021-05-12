@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { vaccineModel } from './vaccine.model';
+import { vaccineModel } from '../sheared/vaccine.model';
+
 
 @Injectable({
   providedIn: 'root'

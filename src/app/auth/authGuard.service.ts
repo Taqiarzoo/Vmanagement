@@ -15,17 +15,13 @@ export class AuthGuardService implements CanActivate {
     route: ActivatedRouteSnapshot, 
     router:RouterStateSnapshot
   ): boolean | Promise<boolean | UrlTree> | Observable<boolean | UrlTree> | UrlTree{
-    return this.auth.user.pipe(map(user=>{
-      console.log("its Auth Guard");
-      const data=localStorage.getItem("userData");
-      if(data){
-        console.log("Element Exist");
-        return true;
+    return this.auth.getUserDetails().pipe(map(user=>{
+      if(user==null || user.token==null || user.id==null || user.email==null){
+        return this.rout.createUrlTree(['login']);
       }else{
-        console.log("element Not Exist");
-        this.rout.navigate(['/']);
-        return false;
+        return true;
       }
-    }));
+        
+    }))
   }
 }

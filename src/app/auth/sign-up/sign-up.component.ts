@@ -1,6 +1,6 @@
 import { Component, OnInit,ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { person } from 'src/app/person.model';
+import { person } from 'src/app/sheared/person.model';
 import { authModel } from '../auth-model';
 import { AuthServiceService } from '../auth-service.service';
 

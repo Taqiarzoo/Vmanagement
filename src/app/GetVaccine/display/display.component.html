@@ -4,9 +4,22 @@
             <div class="form-group">
                 <label for="exampleInputEmail1">Enter Aadhar No</label>
                 <input type="email" class="form-control" placeholder="Enter Aadhar No" [(ngModel)]="aadharNumber">
-                <span class="info">12365475</span>
+                <span class="info">Aadhar No Range (12367210 to 12369939)</span><br>
+                <strong *ngIf="!isBookingToday && isClick" class="text-danger">Sorry Slot is not Booked!..</strong>
                 <hr/>
-                <button class="btn btn-primary mt-4" (click)="loadDtata()">Search</button>
+                <div class="row">
+                    <div class="col-3 p-0 float-right">
+                        <button class="btn btn-primary w-100 mt-4" [disabled]="isloading" (click)="loadDtata()">{{!isloading?  "Search": "Loading...."}}</button>
+                    </div>
+                    <div class="col-3">
+                        <div class="loader" *ngIf="isloading">Loading...</div>
+                    </div>
+
+
+                    <div class="col-6">
+
+                    </div>
+                </div>
 
             </div>
         </div>
@@ -23,7 +36,7 @@
                         <tbody>
                             <tr>
                                 <th scope="col " class="table-dark">Eligibility</th>
-                                <th scope="col">{{person[0].eligibility!=null ? person[0].eligibility: '##########'}}</th>
+                                <th scope="col">{{person[0].eligibility!=null ? (person[0].eligibility? 'Eligible': 'Not Eligible'): '##########'}}</th>
                             </tr>
                             <tr>
                                 <th scope="col " class="table-dark">Name</th>
@@ -35,9 +48,9 @@
                             </tr>
                             <tr>
                                 <th scope="col " class="table-dark">Vaccination Status</th>
-                                <th scope="col">{{person[0].vactnationStatus!=null ? person[0].vactnationStatus:'########'}}</th>
+                                <th scope="col">{{person[0].vactnationStatus!=null ? (person[0].vactnationStatus? 'Vaccinated': 'Not Vaccinated'):'########'}}</th>
                             </tr>
-                            <tr *ngIf="person[0].eligibility==true">
+                            <tr *ngIf="person[0].firstShot==true">
                                 <th scope="col " class="table-dark">First Dose Date</th>
                                 <th scope="col">{{person[0].firstdose | date: 'mediumDate'}}</th>
                             </tr>
@@ -45,7 +58,7 @@
                                 <th scope="col " class="table-dark">Second Dose Date</th>
                                 <th scope="col">{{person[0].seconddose==null ? '############':person[0].seconddose |date: 'short' }}</th>
                             </tr>
-                            <tr *ngIf="person[0].firstShot!=true">
+                            <tr *ngIf="isBookingToday && !person[0].firstShot">
                                 <th scope="col " class="table-dark">Select Vaccine</th>
 
                                 <th scope="col">
@@ -61,13 +74,13 @@
                             </tr>
                             <tr *ngIf="person[0].firstShot==true">
                                 <th scope="col " class="table-dark">
-                                    Second Dose Of:
+                                    {{person[0].vactnationStatus==true? "Vaccine: ": "Second Dose Of:"}}
                                 </th>
                                 <th scope="col ">
                                     {{person[0].vaccine}}
                                 </th>
                             </tr>
-                            <tr *ngIf="person[0].firstShot!=true">
+                            <tr *ngIf="isBookingToday && !person[0].firstShot">
                                 <th scope="col " class="table-dark">Take Vaccine</th>
                                 <th scope="col ">
                                     <ng-template #tipContent>Hello, <b>{{person[0].name}}</b> You are Not Eligible!</ng-template>
@@ -81,7 +94,7 @@
                                     <button class="btn btn-primary float-right" [disabled]="!person[0].isSecondShot" ngDefaultControl (click)="takeSecondShot(person[0])">Take Second Short</button>
                                 </th>
                             </tr>
-                            <tr *ngIf="person[0].firstShot==true && person[0].secondShot==true">
+                            <tr *ngIf="person[0].vactnationStatus==true">
                                 <th scope="col " class="table-dark">Ammunity</th>
                                 <th scope="col ">
                                     <span class="text-center text-success">Congratulation Your Are Now amune to Noval Coronavarious</span>

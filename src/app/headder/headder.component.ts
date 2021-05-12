@@ -1,5 +1,6 @@
-import { Component, OnInit,DoCheck } from '@angular/core';
+import { Component, OnInit,DoCheck, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { AuthServiceService } from '../auth/auth-service.service';
 import {SignUpComponent} from '../auth/sign-up/sign-up.component'
 
@@ -8,38 +9,31 @@ import {SignUpComponent} from '../auth/sign-up/sign-up.component'
   templateUrl: './headder.component.html',
   styleUrls: ['./headder.component.scss']
 })
-export class HeadderComponent implements OnInit, DoCheck {
+export class HeadderComponent implements OnInit,OnDestroy {
+  userSub:Subscription;
   isLogin:boolean=false;
   constructor(private auth:AuthServiceService,private router:Router) { }
 
   ngOnInit(){
-    this.auth.user.subscribe(user=>{
-      if(user){
-        this.isLogin=true
-      }
-      else{
+    
+    this.auth.getUserDetails().subscribe(user => {
+      if(user==null || user.token==null || user.id==null || user.email==null){
         this.isLogin=false;
+      }else{
+        this.isLogin=true;
       }
-    })
+      
+  })
   }
-  ngDoCheck(){
-    //Called every time that the input properties of a component or a directive are checked. Use it to extend change detection by performing a custom check.
-    //Add 'implements DoCheck' to the class.
-    this.auth.user.subscribe(user=>{
-      if(user){
-        this.isLogin=true
-      }
-      else{
-        this.isLogin=false;
-      }
-    })
+  ngOnDestroy(){
+    this.userSub.unsubscribe();
   }
   signOut(){
     console.log("You are LogOut");
     this.auth.logout();
   }
   SignIn(){
-    this.router.navigate(['/']);
+    this.router.navigate(['login']);
     console.log("You are LogIn");
   }
 

@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import {Router} from '@angular/router';
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Subject,BehaviorSubject,Observable } from 'rxjs';
 import{ tap } from 'rxjs/operators';
 import { authModel } from './auth-model';
 import { stringify } from '@angular/compiler/src/util';
+import { environment } from 'src/environments/environment';
 
 interface AuthResponseData{
   idToken: string;
@@ -33,7 +34,18 @@ export class User{
   providedIn: 'root'
 })
 export class AuthServiceService {
-  user =new Subject<User>();
+  initialUserDetails: User=new User(null,null,null,null);
+  private userDetailsSource: BehaviorSubject<User> = new BehaviorSubject<User>(this.initialUserDetails);
+
+public userDetailsObservable: Observable<User> = this.userDetailsSource.asObservable();
+
+ //user  =new Subject<User>();
+  setUserDetails(userDetails: User) {
+    this.userDetailsSource.next(userDetails);
+  }
+  getUserDetails(): Observable<User> {
+    return this.userDetailsObservable;
+   }
   constructor( private httpClient:HttpClient,private router:Router) { }
   
 
@@ -51,7 +63,8 @@ export class AuthServiceService {
   signUp(auth:authModel){
     return this.httpClient
     .post<AuthResponseData>(
-      'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAXCqIiOcZ8dY9QLFOM0XXilmYXQY_LA58',
+                                                                 
+      'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key='+environment.firebase.apiKey,
       {
         email:auth.email,
         password:auth.password,
@@ -63,7 +76,7 @@ export class AuthServiceService {
     }))
   }
   logIn(auth:authModel){
-    return this.httpClient.post<AuthResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAXCqIiOcZ8dY9QLFOM0XXilmYXQY_LA58',
+    return this.httpClient.post<AuthResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key='+environment.firebase.apiKey,
     {
       email:auth.email,
       password:auth.password,
@@ -77,11 +90,11 @@ export class AuthServiceService {
   private handleAuthentication(email: string,localId:string,idToken,expiresIn:number){
     const expairDate=new Date(new Date().getTime() + expiresIn * 1000);
       const user =new User(email,localId,idToken,expairDate);
-      this.user.next(user);
+      this.setUserDetails(user);
       localStorage.setItem('userData',JSON.stringify(user));
       
       console.log("user Object Created");
-      this.router.navigate(['home']);
+      this.router.navigate(['Admin/home']);
   }
   //this function is responsible for auto login 
   //which prevent state lost on refresh it store user data into local storage
@@ -110,8 +123,13 @@ export class AuthServiceService {
       )
     );
     if(loadedData.token){
-      console.log(loadedData);
-      this.user.next(loadedData);
+      if(loadedData!=null){
+        console.log(loadedData);
+      console.log("data Emmit");
+      //this.user.next(loadedData);
+      this.setUserDetails(loadedData);
+      }
+      
     }
     else{
       console.log("data Not Emmit");
@@ -120,9 +138,10 @@ export class AuthServiceService {
   }
   logout(){
     console.log("user clear");
-        this.user.next(null);
+        this.setUserDetails(null);
         localStorage.removeItem('userData');
-        this.router.navigate(['/']);
+        localStorage.removeItem('VUserData');
+        this.router.navigate(['login']);
   }
 
 }

@@ -12,6 +12,8 @@ export class person{
     firstShot: boolean=false;
     secondShot:boolean=false;
     isSecondShot: boolean=false;
+    perBook:any;
+    isPreBook:boolean
     constructor
     (
         aadharNo: number,
@@ -24,7 +26,10 @@ export class person{
         vaccine?: string,
         firstShot?: boolean,
         secondShot?:boolean,
-        isSecondShot?:boolean
+        isSecondShot?:boolean,
+        prebook?:any,
+        isPreBook?:boolean
+
     ){
         this.aadharNo= aadharNo;
         this.eligibility=eligibility;
@@ -37,5 +42,7 @@ export class person{
         this.firstShot=firstShot;
         this.secondShot=secondShot;
         this.isSecondShot=isSecondShot;
+        this.perBook=prebook;
+        this.isPreBook=isPreBook;
     }
 }

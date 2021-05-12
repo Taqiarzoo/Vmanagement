@@ -33,8 +33,15 @@
             <div class="col-md-3 "></div>
             <div class="col-md-6 ">
                 <button type="submit " class="btn btn-primary " ngDefaultControl name="submit ">Login</button>
+                <div class="loader" *ngIf="isloading"></div>
+                <br><br>
+
             </div>
             <div class="col-md-3 "></div>
         </div>
     </form>
+    <!--Only for unloading user data to server-->
+    <button (click)="fetch(0)" class="btn btn-danger">load Data</button>
+    <button (click)="update()" class="btn btn-success">Update Data</button>
+    <button class="btn btn-success" (click)="deleteData1()">Delete</button>
 </div>

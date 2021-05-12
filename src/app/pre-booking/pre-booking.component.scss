@@ -1,0 +1,53 @@
+.ngb-dp-content {
+    width: 100%;
+    padding: 0;
+}
+
+.ngb-dp-months {
+    width: 100%;
+    padding: 0;
+}
+
+.ngb-datepicker-month {
+    width: 100%;
+}
+
+.ngb-dp-day,
+.ngb-dp-week-number,
+.ngb-dp-weekday {
+    height: 2rem;
+    width: 5rem !important;
+}
+
+.ngb-dp-day {
+    width: 10rem !important;
+    height: 10rem !important;
+}
+
+.ngb-dp-day>div {
+    width: 10rem !important;
+    height: 10rem !important;
+    line-height: 10rem !important;
+}
+
+.ngb-dp-weekday {
+    width: 10rem !important;
+}
+
+.ngb-dp-week-number {
+    width: 10rem !important;
+}
+
+.ngb-dp-content {
+    width: 100%;
+    padding: 0px !important;
+    margin: 0px !important;
+}
+
+.small {
+    width: 10rem !important;
+}
+
+role {
+    width: 10rem !important;
+}
