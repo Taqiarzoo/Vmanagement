@@ -1,1 +1,24 @@
-<p>vaccine works!</p>
+<div class="container">
+    <div class="row">
+        <div class="col-12 mt-4  text-center">
+            <h1>Avalibe Vaccines</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class=""></div>
+        <div class="col-md-6 p-3 mt-2 mb-2" *ngFor="let vaccine of vaccinesSet">
+            <div class="card">
+                <div class="card-header">
+                    <h3><strong>{{vaccine.name}}</strong></h3>
+                </div>
+                <img class="card-img-top" [src]="vaccine.imgSource" [alt]="vaccine.name">
+                <div class="card-body">
+                    <img [src]="url" src="{{vaccine.imageSource}}">
+                    <h3 class="card-title"><strong>Company:  {{vaccine.company}}</strong></h3>
+                    <p class="card-text"><strong>{{vaccine.discription}}</strong></p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

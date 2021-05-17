@@ -14,7 +14,7 @@ export class PreBookingComponent implements OnInit {
   //Calander Specfic
   //#region 
   year1=new Date().getFullYear();
-   isDisabled = (date: NgbDate, current: {month: number}) => date.day === 13;
+   isDisabled = (date: NgbDate, current: {month: number}) => date.day === 1;
    today1=new Date();
   setMinDate:{
     year: any, 

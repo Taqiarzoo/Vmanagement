@@ -1,1 +1,55 @@
-<p>statistic works!</p>
+<div class="container">
+    <div class="row">
+        <div class="col-12 mt-5 text-center">
+            <h1>Statistic Data</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mt-5">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    Statistic
+                </div>
+                <div class="card-body">
+
+                    <canvas class="w-100 card-group" style="width: 500px; height: auto;" #dataChart baseChart [chartType]="'bar'" [legend]="true" [datasets]="chartData" [labels]="chartLabels" [options]="chartOptions">
+                        </canvas>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-6 mt-5" *ngIf="vaccinatedWith">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    Vaccines Used
+                </div>
+                <div class="card-body">
+                    <canvas class="w-100" style="width: 500px; height: auto;" baseChart [chartType]="'line'" [legend]="true" [datasets]="vaccinatedWith.chartGraphicDataData" [labels]="vaccinatedWith.chartLabels" [options]="vaccinatedWith.chartOptions">
+              </canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mt-5 " *ngIf="vaccineAgeGroup">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    vaccinated Age Group
+                </div>
+                <div class="card-body">
+                    <canvas class="w-100" style="width: 500px; height: auto;" baseChart [chartType]="vaccineAgeGroup.chartTypeV" [legend]="true" [datasets]="vaccineAgeGroup.chartGraphicDataData" [labels]="vaccineAgeGroup.chartLabels" [options]="vaccineAgeGroup.chartOptions">
+              </canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mt-5 " *ngIf="vaccinationStatus">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    vaccinated Age Group
+                </div>
+                <div class="card-body">
+                    <canvas class="w-100" style="width: 500px; height: auto;" baseChart [chartType]="vaccinationStatus.chartTypeV" [legend]="false" [datasets]="vaccinationStatus.chartGraphicDataData" [labels]="vaccinationStatus.chartLabels" [options]="vaccinationStatus.chartOptions">
+              </canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

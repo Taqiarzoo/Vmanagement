@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { VaccineService } from 'src/app/services/vaccine.service';
+import { vaccineModel } from 'src/app/sheared/vaccine.model';
 
 @Component({
   selector: 'app-vaccine',
@@ -7,9 +9,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class VaccineComponent implements OnInit {
 
-  constructor() { }
+  vaccinesSet:vaccineModel[]=[]
+  constructor(private vaccines:VaccineService) { }
 
   ngOnInit(): void {
+    this.vaccinesSet=this.vaccines.vaccine;
+    console.log(this.vaccinesSet)
   }
 
 }

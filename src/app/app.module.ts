@@ -6,11 +6,11 @@ import {HttpClientModule} from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DisplayComponent } from './GetVaccine/display/display.component';
-import { SubHeaderComponent } from './Statistic/sub-header/sub-header.component';
+//import { SubHeaderComponent } from './Statistic/sub-header/sub-header.component';
 import { StatisticComponent } from './Statistic/statistic/statistic.component';
-import { TotalVaccinatedComponent } from './Statistic/total-vaccinated/total-vaccinated.component';
-import { UnvaccinatedComponent } from './Statistic/unvaccinated/unvaccinated.component';
-import { AvailableDosesComponent } from './Statistic/available-doses/available-doses.component';
+//import { TotalVaccinatedComponent } from './Statistic/total-vaccinated/total-vaccinated.component';
+//import { UnvaccinatedComponent } from './Statistic/unvaccinated/unvaccinated.component';
+//import { AvailableDosesComponent } from './Statistic/available-doses/available-doses.component';
 import { VaccineComponent } from './Vaccine/vaccine/vaccine.component';
 import { GetVaccineComponent } from './GetVaccine/get-vaccine/get-vaccine.component';
 import { HeadderComponent } from './headder/headder.component';
@@ -26,7 +26,10 @@ import { AuthGuardService } from './auth/authGuard.service';
 import { AuthServiceService } from './auth/auth-service.service';
 import { ErrorPageComponent } from './error-page/error-page.component';
 import { PreBookingComponent } from './pre-booking/pre-booking.component';
+import { Chart, } from 'chart.js';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ChartsModule } from 'ng2-charts';
+
 const routes:Routes=[
   {path: '',component: PreBookingComponent },
   
@@ -42,11 +45,7 @@ const routes:Routes=[
   declarations: [
     AppComponent,
     DisplayComponent,
-    SubHeaderComponent,
     StatisticComponent,
-    TotalVaccinatedComponent,
-    UnvaccinatedComponent,
-    AvailableDosesComponent,
     VaccineComponent,
     GetVaccineComponent,
     HeadderComponent,
@@ -62,6 +61,7 @@ const routes:Routes=[
     AppRoutingModule,
     NgbModule,
     FormsModule,
+    ChartsModule,
     HttpClientModule,
     RouterModule.forRoot(routes), BrowserAnimationsModule
   ],

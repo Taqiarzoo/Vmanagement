@@ -38,18 +38,24 @@ export class DisplayComponent implements OnInit {
   ) { }
   loadDtata(){
     this.isloading=true;
+    this.isBookingToday=false;
     
     //this.dataService.getAadhar(this.aadharNumber);
     //console.log("Before Sending"+)
       this.dataService.loadDetailes(this.aadharNumber).subscribe(data=>{
         console.log(data.perBook);
         console.log(new Date());
-        alert(new Date(data.perBook)+" Date Now "+new Date());
         this.person.splice(0,1,data);
-        if(new Date()>=new Date(this.person[0].perBook)){
-          this.isBookingToday=true;
-          alert("Executed");
+        if(!this.dataService.strictBooking){
+          if(new Date()>=new Date(this.person[0].perBook)){
+            this.isBookingToday=true;
+          }
+        }else{
+          if(new Date()==new Date(this.person[0].perBook)){
+            this.isBookingToday=true;
+          }
         }
+        
         this.dataService.writetoLocal(data,'VUserData');
         this.isClick=true;
         this.isloading=false;
@@ -72,6 +78,9 @@ export class DisplayComponent implements OnInit {
     if(person){
       this.person.splice(0,1,person);
     }
+    if(new Date()>=new Date(this.person[0].perBook)){
+      this.isBookingToday=true;
+    }
     
     //observable to check the second shoot 
     this.secondShot=Observable.create(observer=>{
@@ -81,7 +90,7 @@ export class DisplayComponent implements OnInit {
           isSecondShoot=true;
         }
        
-        console.log(new Date()  +" Second Dose "+this.person[0].seconddose+"is Second"+isSecondShoot);
+       // console.log(new Date()  +" Second Dose "+this.person[0].seconddose+"is Second"+isSecondShoot);
         observer.next(isSecondShoot);
       },1000);
     })

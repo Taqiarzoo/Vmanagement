@@ -13,7 +13,9 @@ export const environment = {
     messagingSenderId: "414645304558",
     appId: "1:414645304558:web:b6a89b579da477a4a407ff", 
     measurementId: "G-FPTVKWMTZJ",
-    userDataBaseURL:"https://vmanagement-22ebf-default-rtdb.firebaseio.com/User/-M_RSrhwXrbmYXFlpYDU/"
+    loadAll: "/User/-M_RSrhwXrbmYXFlpYDU.json",
+    userDataBaseURL:"https://vmanagement-22ebf-default-rtdb.firebaseio.com/User/-M_RSrhwXrbmYXFlpYDU/",
+    chartData:"https://vmanagement-22ebf-default-rtdb.firebaseio.com/ChartData/-M_u3uozPE1zG-K8UQ_N.json"
   }
 };
 

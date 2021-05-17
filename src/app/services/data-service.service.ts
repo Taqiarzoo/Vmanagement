@@ -6,9 +6,10 @@ import { promise } from 'protractor';
 import { map, take } from 'rxjs/operators';
 import { person } from '../sheared/person.model';
 import { Observable, throwError, of, from } from 'rxjs';
-import { catchError, mergeMap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { Console } from 'node:console';
+import { statisticData } from '../sheared/statisticData.model';
+
+
 
 
 
@@ -16,77 +17,36 @@ import { Console } from 'node:console';
 @Injectable({
   providedIn: 'root'
 })
+
 export class DataServiceService {
   constructor(private httpClient:HttpClient){
 
   }
+  
+  statitasticData:statisticData=new statisticData();
   persn:person[]=[
     new person(12365475,true,'MOhd Hussain',23,false,null,null),
     new person(12365478,false,'MOhd Taqi',20,false,null,null),
     new person(12365476,true,'MOhd Hussain',23,true,null,null)
   ]
+  strictBooking:boolean=false;//if its true then vaccination is only done to those who have booking today
+  //if false then vaccination is done to anyone who booked a slot
  aadhar: Number=0;
- /* persons=[
-   
-    {
-      aadhar: 12365476,
-      eligibility: true,
-      name:'Mohd Hussain',
-      age: 40,
-      vactnationStatus:true,
-      firstdose: Date=null,
-      seconddose: Date=null
-    },
-    {
-      aadhar: 12365478,
-      eligibility: true,
-      name:'Mohd Taqi',
-      age: 20,
-      vactnationStatus:false,
-      firstdose: Date=null,
-      seconddose: Date=null
-    },
-    {
-      aadhar: 12365475,
-      eligibility: false,
-      name:'Mohd Hassnain',
-      age: 30,
-      vactnationStatus:false,
-      firstdose: Date=null,
-      seconddose: Date=null
-    },
-    {
-      aadhar: 12365474,
-      eligibility: true,
-      name:'Mohd Akbar',
-      age: 50,
-      vactnationStatus:false,
-      firstdose: Date=null,
-      seconddose: Date=null
-    },
-    {
-      aadhar: 12365473,
-      eligibility: true,
-      name:'Mohd Akbar',
-      age: 50,
-      vactnationStatus:false,
-      firstdose: Date=null,
-      seconddose: Date=null
-    },
-    
-  ]*/
-  
+
   getAadhar(aadhar: Number){
     this.aadhar=aadhar;
     console.log(this.aadhar);
   }
+  //write Data to browser storage
   writetoLocal(user:person,storeId:string){
     localStorage.setItem(storeId,JSON.stringify(user));
   }
+  //read data from browser storage
   readFromLocal(storeId:string){
     const person:person=JSON.parse(localStorage.getItem(storeId));
     return person;
   }
+  //load data from server
   loadDetailes(aadhar:number){
     return  this.httpClient.get<person>
     (
@@ -107,6 +67,7 @@ export class DataServiceService {
       }
     )
   }
+  //update changes of second Shoot
   updateUserSecondShoot(secondShoot:boolean,vactnationStatus: boolean, aadharNo:number){
     return this.httpClient.patch
     (
@@ -118,18 +79,21 @@ export class DataServiceService {
       }
     )
   }
+  //prebooking Function
   updateUserPreBooking(perBook:any,isPreBook: boolean, aadharNo:number){
+    let perbookstring="perBook"
+    var objects={}
     return this.httpClient.patch
     (
       environment.firebase.userDataBaseURL+aadharNo+'.json',
       {
-        perBook: perBook,
+        objects,[perbookstring]: perBook,
         isPreBook: isPreBook
 
       }
     )
   }
-  //now call
+  //its call when user take first vaccine Shot
   firstShort(element:person,vaccine:string){
           element.firstdose= Date.now();
           let a = new Date(element.firstdose);
@@ -143,6 +107,7 @@ export class DataServiceService {
           this.updateUser(element,element.aadharNo)
           .subscribe(responseData=>{
             this.writetoLocal(element,'VUserData');
+            this.updateStastisticDate(element,1);
             console.log("Data Updated");
             console.log(responseData);
           },error=>{
@@ -150,12 +115,15 @@ export class DataServiceService {
             console.log(error);
           })
   } 
+  //it will call when user take second vaccine shot
   secondShot(element: person){
     element.secondShot=true;
     element.vactnationStatus=true;
     this.updateUserSecondShoot(element.secondShot,element.vactnationStatus,element.aadharNo)
           .subscribe(responseData=>{
             this.writetoLocal(element,'VUserData');
+            
+            this.updateStastisticDate(element,null);
             console.log("Data Updated");
             console.log(responseData);
           },error=>{
@@ -163,6 +131,8 @@ export class DataServiceService {
             console.log(error);
           })
   }
+  //it will call when prebooking is done
+  //it subscribe prebooking observable
   preBook(person:person,aadharNO:number){                         
     this.updateUserPreBooking(person.perBook,person.isPreBook,aadharNO).subscribe(responseData=>{
             this.writetoLocal(person,'preBook');
@@ -173,6 +143,8 @@ export class DataServiceService {
             console.log(error);
           })
   }
+  //automatically generate user data and upload to firebase
+  //#region 
   //names Array Region
  //#region 
 
@@ -194,20 +166,8 @@ export class DataServiceService {
     //console.log(this.personElement);
     let age=Math.floor(Math.random()*80)+1;
     console.log(age);
-  }/*
-  {
-    aadharNo: 'dbs',
-    eligibility: false,
-    name: 'abc',
-    age: 26,
-    vactnationStatus: false,
-    firstdose: new Date(),
-    seconddose:new Date(),
-    vaccine: 'ABC',
-    firstShot: false,
-    secondShot: false,
-    isSecondShot: false
-  };*/
+  }
+
    aadhar1:number=12367210;
   saveUser(){
     console.log(this.names.length)
@@ -272,6 +232,198 @@ export class DataServiceService {
       alert(error);
     })
   }
-}
+  //#endregion
 
+ //Statistics Page Work UnUsed Now
+  loadAllUserData(){
+   return this.httpClient.get<person>(environment.firebase.databaseURL+environment.firebase.loadAll).pipe(map(data=>{
+     console.log("Data Loading Start")
+     let persons:person[]=[];
+      for(let key in data){
+        persons.push(data[key]);
+      }
+      console.log("Data Loading Finish")
+     return persons;
+   }))
+ }
+ //not in used
+statisticsInfo(persons:person[]){
+  this.statitasticData.total=persons.length;
+  for(let person of persons){
+    if(person.eligibility){
+      if(person.vactnationStatus){
+        if(person.vaccine==this.statitasticData.vaccine[0]){
+          this.statitasticData.Pfizer=this.statitasticData.Pfizer+1;
+        }else if(person.vaccine==this.statitasticData.vaccine[1]){
+          this.statitasticData.CoviShild=this.statitasticData.CoviShild+1;
+        }else if(person.vaccine==this.statitasticData.vaccine[2]){
+          this.statitasticData.Moderna=this.statitasticData.Moderna+1;
+        }
+        else if(person.vaccine==this.statitasticData.vaccine[3]){
+          this.statitasticData.COVAXIN=this.statitasticData.COVAXIN+1;
+        }
+        if(person.age<=40){
+          this.statitasticData.twintyToFourty=this.statitasticData.twintyToFourty+1;
+        }else if(person.age<=60){
+          this.statitasticData.fourtyToSixty=this.statitasticData.fourtyToSixty+1;
+        }
+        else if(person.age>=60){
+          this.statitasticData.sixtyToAbove=this.statitasticData.sixtyToAbove+1;
+        }
+        this.statitasticData.vaccinated=this.statitasticData.vaccinated+1;
+      }else if(person.firstShot){
+        if(person.age<=40){
+          this.statitasticData.uTwintyToFourty=this.statitasticData.uTwintyToFourty+1;
+        }else if(person.age<=60){
+          this.statitasticData.uFourtyToSixty=this.statitasticData.uFourtyToSixty+1;
+        }
+        else if(person.age>=60){
+          this.statitasticData.uSixtyToAbove=this.statitasticData.uSixtyToAbove+1;
+        }
+          this.statitasticData.firstDose=this.statitasticData.firstDose+1;
+      }else{
+        if(person.age<=40){
+          this.statitasticData.uTwintyToFourty=this.statitasticData.uTwintyToFourty+1;
+        }else if(person.age<=60){
+          this.statitasticData.uFourtyToSixty=this.statitasticData.uFourtyToSixty+1;
+        }
+        else if(person.age>=60){
+          this.statitasticData.uSixtyToAbove=this.statitasticData.uSixtyToAbove+1;
+        }
+      }
+    }else if(person.age<20){
+      this.statitasticData.bellowTwinty=this.statitasticData.bellowTwinty+1;
+    }else{
+      
+    }
+  }
+  console.log(this.statitasticData);
+  return this.statitasticData;
+}
+//To save Statistic Data Used Only Once in Begning
+savaDataStastisticPost(statitasticData:statisticData){
+  
+  // let persons:person=new person(null,null,null,null,null,null,null,null,null,null,null);
+  return this.httpClient
+  .post<person>(
+    'https://vmanagement-22ebf-default-rtdb.firebaseio.com/ChartData.json',
+    statitasticData
+  ).pipe(map(data=>{
+    
+  }))
+}
+//used once in begning Now Not in used
+StastisticPost(statitasticData:statisticData){
+  this.savaDataStastisticPost(statitasticData).subscribe(data=>{
+    console.log("Data Save Sussfully");
+    alert("Data Saved");
+  },error=>{
+    console.log("error Occure");
+  })
+}
+//this will load all Data Related To Chart
+loadStastisticDate(){
+  return this.httpClient.get<statisticData>(environment.firebase.chartData)
+}
+updateStastisticDate(person:person,firstDose?:number){
+  this.loadStastisticDate().subscribe(statitasticData=>{
+    if(firstDose==null)
+    {
+        var vaccine:string="";
+        var ageGroup:string="";
+        var vaccineNumber:number=0
+        var ageGroupNumber:number=0
+        var vaccinated="vaccinated";
+        console.log("Second Dose");
+        console.log(statitasticData);
+        if(person.vaccine==statitasticData.vaccine[0]){
+          statitasticData.Pfizer=statitasticData.Pfizer+1;
+          vaccine="Pfizer";
+          vaccineNumber=statitasticData.Pfizer;
+        }else if(person.vaccine==statitasticData.vaccine[1]){
+          statitasticData.CoviShild=statitasticData.CoviShild+1;
+          vaccine="CoviShild";
+          vaccineNumber=statitasticData.CoviShild;
+        }else if(person.vaccine==statitasticData.vaccine[2]){
+          statitasticData.Moderna=statitasticData.Moderna+1;
+          vaccine="Moderna";
+          vaccineNumber=statitasticData.Moderna;
+        }
+        else if(person.vaccine==statitasticData.vaccine[3]){
+          statitasticData.COVAXIN=statitasticData.COVAXIN+1;
+          vaccine="COVAXIN";
+          vaccineNumber=statitasticData.COVAXIN;
+        }
+        if(person.age<=40){
+          statitasticData.twintyToFourty=statitasticData.twintyToFourty+1;
+          ageGroup="twintyToFourty";
+          ageGroupNumber=statitasticData.twintyToFourty;
+        }else if(person.age<=60){
+          statitasticData.fourtyToSixty=statitasticData.fourtyToSixty+1;
+          ageGroup="fourtyToSixty";
+          ageGroupNumber=statitasticData.fourtyToSixty;
+        }
+        else if(person.age>=60){
+          statitasticData.sixtyToAbove=statitasticData.sixtyToAbove+1;
+          ageGroup="sixtyToAbove";
+          ageGroupNumber=statitasticData.sixtyToAbove;
+        }
+        statitasticData.vaccinated=statitasticData.vaccinated+1;
+        statitasticData.firstDose=statitasticData.firstDose-1;
+        this.updateChart
+        (
+          null,statitasticData.firstDose,"firstDose",
+          vaccineNumber,ageGroupNumber,statitasticData.vaccinated,
+          vaccine,ageGroup,vaccinated
+        ).subscribe(data=>{
+          console.log("data Updated");
+        },error=>{
+          console.log("error Occure");
+        })
+    }else{
+      statitasticData.firstDose=statitasticData.firstDose+1;
+      console.log(statitasticData);
+      console.log("First Dose");
+      this.updateChart(1,statitasticData.firstDose,"firstDose").subscribe(data=>{
+          console.log("data Updated");
+        },error=>{
+          console.log("error Occure");
+        })
+    }
+  })
+}
+updateChart
+(
+  flag?:number,firstDose?:number,firstDoseKey?:string,
+  vaccine?:number,ageGroup?:number,vaccinated?:number,
+  vaccineKey?:string,ageGroupKey?:string,vaccinatedKey?:string
+){
+  var vaccineObj={}
+  var ageGroupObj={}
+  var vaccinatedObj={}
+  var firstDoseObj={}
+if(flag==null){
+  return this.httpClient.patch
+  (
+    environment.firebase.chartData,
+    {
+      vaccineObj,[vaccineKey]: vaccine,
+      ageGroupObj,[ageGroupKey]: ageGroup,
+      firstDoseObj,[firstDoseKey]:firstDose,
+      vaccinatedObj,[vaccinatedKey]:vaccinated
+
+    }
+  )
+}else{
+  return this.httpClient.patch
+  (
+    environment.firebase.chartData,
+    {
+      firstDoseObj,[firstDoseKey]: firstDose,
+    }
+  )
+}
+  
+}
+}
 
